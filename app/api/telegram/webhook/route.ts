@@ -2,10 +2,19 @@
 
 export const users = new Map();
 
+// ✅ GET (405 ni yo‘q qiladi)
+export async function GET() {
+  return Response.json({ ok: true });
+}
+
 export async function POST(req: Request) {
   const body = await req.json();
 
-  // ✅ 1. START
+  console.log("KELDI:", body);
+
+  const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+
+  // ✅ START
   if (body.message?.text === "/start") {
     const chatId = body.message.chat.id;
     const username = body.message.from.username;
@@ -14,24 +23,21 @@ export async function POST(req: Request) {
 
     console.log("USER SAQLANDI:", username, chatId);
 
-    await fetch(
-      `https://api.telegram.org/bot${process.env.TOKEN}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: "✅ Siz ro‘yxatdan o‘tdingiz!",
-        }),
+    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: "✅ Siz ro‘yxatdan o‘tdingiz!",
+      }),
+    });
   }
 
-  // ✅ 2. BUTTON
+  // ✅ BUTTON
   if (body.callback_query) {
     const data = body.callback_query.data;
-
-    console.log("BUTTON:", data);
 
     const [status, orderId, username] = data.split("_");
 
@@ -48,30 +54,27 @@ export async function POST(req: Request) {
     }
 
     if (chatId) {
-      await fetch(
-        `https://api.telegram.org/bot${process.env.TOKEN}/sendMessage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text,
-          }),
+      await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+        }),
+      });
     }
 
-    // ❗ MUHIM (aks holda loading turib qoladi)
-    await fetch(
-      `https://api.telegram.org/bot${process.env.TOKEN}/answerCallbackQuery`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          callback_query_id: body.callback_query.id,
-        }),
+    await fetch(`https://api.telegram.org/bot${TOKEN}/answerCallbackQuery`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify({
+        callback_query_id: body.callback_query.id,
+      }),
+    });
   }
 
   return Response.json({ ok: true });
