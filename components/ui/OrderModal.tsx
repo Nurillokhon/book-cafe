@@ -68,10 +68,10 @@ export default function OrderModal({ open, onClose, product }: Props) {
   const [status, setStatus] = useState<
     | null
     | {
-        type: "success" | "error";
-        text: string;
-        telegramTrackUrl?: string;
-      }
+      type: "success" | "error";
+      text: string;
+      telegramTrackUrl?: string;
+    }
   >(null);
 
   const canSubmit = useMemo(() => {
