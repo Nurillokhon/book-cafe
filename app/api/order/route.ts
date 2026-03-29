@@ -24,7 +24,7 @@ function escapeHtml(s: string) {
 // ─── Webhook secret tekshiruvi ───────────────────────────────────────────────
 function isValidSecret(req: NextRequest): boolean {
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  if (!secret) return true; // secret o'rnatilmagan bo'lsa — ochiq
+  if (!secret) return true;
   return req.headers.get("x-telegram-bot-api-secret-token") === secret;
 }
 
