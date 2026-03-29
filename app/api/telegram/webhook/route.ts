@@ -87,7 +87,26 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  console.log("🔥 KELDI TELEGRAM");
+  const body = await req.json();
+
+  console.log("🔥 BODY:", body);
+
+  const chatId = body.message?.chat?.id;
+
+  const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+
+  if (chatId) {
+    await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: "✅ Siz ro‘yxatdan o‘tdingiz!",
+      }),
+    });
+  }
 
   return Response.json({ ok: true });
 }
