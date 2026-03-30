@@ -43,7 +43,11 @@ export async function POST(req: Request) {
 
     const [status, orderId, username] = data.split("_");
 
+    console.log(orderId, "hello world");
+
     const chatId = users.get(username);
+
+    console.log(username, "box");
 
     let text = "";
 
