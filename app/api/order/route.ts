@@ -1,5 +1,5 @@
 /** @format */
-import { normalizeTelegramUsername, users } from "@/lib/telegram-users";
+import { getUserChatId, normalizeTelegramUsername } from "@/lib/telegram-users";
 
 export async function POST(req: Request) {
   const { name, phone, product, address, location, telegramUsername } =
@@ -7,7 +7,7 @@ export async function POST(req: Request) {
 
   const orderId = crypto.randomUUID();
   const usernameKey = normalizeTelegramUsername(telegramUsername);
-  const userChatId = usernameKey ? users.get(usernameKey) : undefined;
+  const userChatId = usernameKey ? await getUserChatId(usernameKey) : null;
 
   const maps =
     location?.lat && location?.lng

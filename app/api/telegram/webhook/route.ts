@@ -2,7 +2,11 @@
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-import { normalizeTelegramUsername, users } from "@/lib/telegram-users";
+import {
+  getUserChatId,
+  normalizeTelegramUsername,
+  saveUserChatId,
+} from "@/lib/telegram-users";
 
 // ✅ GET (405 ni yo‘q qiladi)
 export async function GET() {
@@ -21,7 +25,7 @@ export async function POST(req: Request) {
     const chatId = body.message.chat.id;
     const username = normalizeTelegramUsername(body.message.from?.username);
 
-    if (username) users.set(username, chatId);
+    if (username) await saveUserChatId(username, chatId);
 
     console.log("USER SAQLANDI:", username, chatId);
 
@@ -46,7 +50,7 @@ export async function POST(req: Request) {
     console.log(orderId, "hello world");
 
     const usernameKey = normalizeTelegramUsername(username);
-    const chatId = usernameKey ? users.get(usernameKey) : undefined;
+    const chatId = usernameKey ? await getUserChatId(usernameKey) : null;
 
     console.log(usernameKey ?? username, "box");
 
@@ -68,7 +72,7 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({
           chat_id: chatId,
-          text,
+          text: `${text}\n\nID: ${orderId}`,
         }),
       });
     }
