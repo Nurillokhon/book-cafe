@@ -45,14 +45,14 @@ ${maps ? `<b>🗺 Location:</b> ${maps}` : ""}
             {
               text: "🧑‍🍳 Tayyorlanmoqda",
               callback_data: usernameKey
-                ? `cooking_${orderId}_${usernameKey}`
-                : `cooking_${orderId}`,
+                ? `cooking:${orderId}:${usernameKey}`
+                : `cooking:${orderId}`,
             },
           ],
           [
             {
               text: "✅ Tayyor (chiqarildi)",
-              callback_data: usernameKey ? `done_${orderId}_${usernameKey}` : `done_${orderId}`,
+              callback_data: usernameKey ? `done:${orderId}:${usernameKey}` : `done:${orderId}`,
             },
           ],
         ],

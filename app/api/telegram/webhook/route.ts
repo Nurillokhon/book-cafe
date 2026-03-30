@@ -43,9 +43,25 @@ export async function POST(req: Request) {
 
   // ✅ BUTTON
   if (body.callback_query) {
-    const data = body.callback_query.data;
+    const data: string = body.callback_query.data ?? "";
 
-    const [status, orderId, username] = data.split("_");
+    // Yangi format: status:orderId:username  (username ichida "_" bo‘lishi mumkin)
+    // Eski format:  status_orderId_username
+    let status = "";
+    let orderId = "";
+    let username = "";
+
+    if (data.includes(":")) {
+      const parts = data.split(":");
+      status = parts[0] ?? "";
+      orderId = parts[1] ?? "";
+      username = parts.slice(2).join(":"); // username’da ":" bo‘lmaydi, lekin xavfsiz
+    } else {
+      const parts = data.split("_");
+      status = parts[0] ?? "";
+      orderId = parts[1] ?? "";
+      username = parts.slice(2).join("_"); // username’da "_" bo‘lishi mumkin
+    }
 
     console.log(orderId, "hello world");
 
