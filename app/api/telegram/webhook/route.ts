@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-export const users = new Map();
+import { normalizeTelegramUsername, users } from "@/lib/telegram-users";
 
 // ✅ GET (405 ni yo‘q qiladi)
 export async function GET() {
@@ -17,11 +17,11 @@ export async function POST(req: Request) {
   const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 
   // ✅ START
-  if (body.message?.text === "/start") {
+  if (typeof body.message?.text === "string" && body.message.text.startsWith("/start")) {
     const chatId = body.message.chat.id;
-    const username = body.message.from.username;
+    const username = normalizeTelegramUsername(body.message.from?.username);
 
-    users.set(username, chatId);
+    if (username) users.set(username, chatId);
 
     console.log("USER SAQLANDI:", username, chatId);
 
@@ -45,9 +45,10 @@ export async function POST(req: Request) {
 
     console.log(orderId, "hello world");
 
-    const chatId = users.get(username);
+    const usernameKey = normalizeTelegramUsername(username);
+    const chatId = usernameKey ? users.get(usernameKey) : undefined;
 
-    console.log(username, "box");
+    console.log(usernameKey ?? username, "box");
 
     let text = "";
 

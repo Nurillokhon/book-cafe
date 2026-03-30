@@ -1,12 +1,13 @@
 /** @format */
-import { users } from "../telegram/webhook/route";
+import { normalizeTelegramUsername, users } from "@/lib/telegram-users";
 
 export async function POST(req: Request) {
   const { name, phone, product, address, location, telegramUsername } =
     await req.json();
 
   const orderId = crypto.randomUUID();
-  const userChatId = users.get(telegramUsername);
+  const usernameKey = normalizeTelegramUsername(telegramUsername);
+  const userChatId = usernameKey ? users.get(usernameKey) : undefined;
 
   const maps =
     location?.lat && location?.lng
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
 <b>👤 Ism:</b> ${name}
 <b>📞 Telefon:</b> ${phone}
 <b>📍 Manzil:</b> ${address}
-<b>📍 Telegram:</b> @${telegramUsername}
+${usernameKey ? `<b>📍 Telegram:</b> @${usernameKey}` : ""}
 ${maps ? `<b>🗺 Location:</b> ${maps}` : ""}
 `;
 
@@ -43,13 +44,15 @@ ${maps ? `<b>🗺 Location:</b> ${maps}` : ""}
           [
             {
               text: "🧑‍🍳 Tayyorlanmoqda",
-              callback_data: `cooking_${orderId}`,
+              callback_data: usernameKey
+                ? `cooking_${orderId}_${usernameKey}`
+                : `cooking_${orderId}`,
             },
           ],
           [
             {
               text: "✅ Tayyor (chiqarildi)",
-              callback_data: `done_${orderId}`,
+              callback_data: usernameKey ? `done_${orderId}_${usernameKey}` : `done_${orderId}`,
             },
           ],
         ],
