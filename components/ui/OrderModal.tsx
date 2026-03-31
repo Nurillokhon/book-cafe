@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Loader2, X } from "lucide-react";
 import { useEffect, useId, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   open: boolean;
@@ -54,6 +55,7 @@ function FloatingInput({
 }
 
 export default function OrderModal({ open, onClose, product }: Props) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -112,15 +114,16 @@ export default function OrderModal({ open, onClose, product }: Props) {
         }),
       });
 
-      if (!res.ok) throw new Error("Order failed");
-
       const data = (await res.json()) as {
         telegramTrackUrl?: string;
+        error?: string;
       };
+
+      if (!res.ok) throw new Error(data?.error || t("orderModal.errorGeneric"));
 
       setStatus({
         type: "success",
-        text: "Buyurtma yuborildi. Tez orada siz bilan bog‘lanamiz.",
+        text: t("orderModal.success"),
         telegramTrackUrl: data.telegramTrackUrl,
       });
       const delay = data.telegramTrackUrl ? 12000 : 1600;
@@ -133,7 +136,7 @@ export default function OrderModal({ open, onClose, product }: Props) {
         text:
           err instanceof Error
             ? err.message
-            : "Xatolik yuz berdi. Qayta urinib ko‘ring.",
+            : t("orderModal.errorGeneric"),
       });
     } finally {
       setLoading(false);
@@ -142,7 +145,7 @@ export default function OrderModal({ open, onClose, product }: Props) {
 
   const getLocation = () => {
     if (!("geolocation" in navigator)) {
-      setStatus({ type: "error", text: "Browser location qo‘llab-quvvatlamaydi." });
+      setStatus({ type: "error", text: t("orderModal.browserNoLocation") });
       return;
     }
     setLocating(true);
@@ -161,8 +164,8 @@ export default function OrderModal({ open, onClose, product }: Props) {
           type: "error",
           text:
             err.code === err.PERMISSION_DENIED
-              ? "Location ruxsati berilmadi."
-              : "Location olishda xatolik. Qayta urinib ko‘ring.",
+              ? t("orderModal.locationDenied")
+              : t("orderModal.locationError"),
         });
       },
       { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 },
@@ -199,10 +202,10 @@ export default function OrderModal({ open, onClose, product }: Props) {
                     ORDER
                   </div>
                   <div className="mt-2 text-xl font-semibold tracking-tight text-white">
-                    Buyurtma berish
+                    {t("orderModal.heading")}
                   </div>
                   <div className="mt-1 text-sm text-white/65">
-                    Mahsulot:{" "}
+                    {t("orderModal.productLabel")}:{" "}
                     <span className="font-medium text-white">{product}</span>
                   </div>
                 </div>
@@ -219,32 +222,29 @@ export default function OrderModal({ open, onClose, product }: Props) {
               <div className="px-5 pb-5 sm:px-6">
                 <form onSubmit={submit} className="space-y-4">
                   <FloatingInput
-                    label="Ism"
+                    label={t("orderModal.name")}
                     value={name}
                     onChange={setName}
                   />
                   <FloatingInput
-                    label="Telefon"
+                    label={t("orderModal.phone")}
                     value={phone}
                     onChange={setPhone}
                     type="tel"
                     inputMode="tel"
                   />
                   <FloatingInput
-                    label="Manzil"
+                    label={t("orderModal.address")}
                     value={address}
                     onChange={setAddress}
                   />
                   <FloatingInput
-                    label="Telegram username (holat xabarlari)"
+                    label={t("orderModal.telegramUsername")}
                     value={telegramUsername}
                     onChange={setTelegramUsername}
                   />
                   <p className="text-xs text-white/45">
-                    Telegram Sozlamalar → Username bilan bir xil yozing (masalan
-                    myname). Avvalo shu akkaunt bilan botga bir marta /start
-                    yuboring — shunda tayyorlik tugmalari bosilganda xabar
-                    aynan shu foydalanuvchiga boradi.
+                    {t("orderModal.telegramHint")}
                   </p>
 
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -258,7 +258,7 @@ export default function OrderModal({ open, onClose, product }: Props) {
                         "disabled:opacity-60 disabled:hover:bg-white/10",
                       ].join(" ")}
                     >
-                      {locating ? "Location olinmoqda..." : "📍 Location yuborish"}
+                      {locating ? t("orderModal.locating") : `📍 ${t("orderModal.sendLocation")}`}
                     </button>
                     {location ? (
                       <div className="text-xs text-white/60">
@@ -266,7 +266,7 @@ export default function OrderModal({ open, onClose, product }: Props) {
                       </div>
                     ) : (
                       <div className="text-xs text-white/50">
-                        ixtiyoriy (optional)
+                        {t("orderModal.optional")}
                       </div>
                     )}
                   </div>
@@ -277,7 +277,7 @@ export default function OrderModal({ open, onClose, product }: Props) {
                       window.open("https://t.me/Book_coffeeUz_bot", "_blank", "noopener,noreferrer")
                     }
                   >
-                    📲 Telegram orqali kuzatish
+                    📲 {t("orderModal.trackTelegram")}
                   </button>
 
                   {status ? (
@@ -315,7 +315,7 @@ export default function OrderModal({ open, onClose, product }: Props) {
                     {loading ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : null}
-                    {loading ? "Yuborilmoqda..." : "Buyurtmani yuborish"}
+                    {loading ? t("orderModal.submitting") : t("orderModal.submit")}
                   </button>
                 </form>
               </div>

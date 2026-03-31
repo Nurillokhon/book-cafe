@@ -1,63 +1,54 @@
-import { FaCoffee, FaBook, FaGamepad, FaBirthdayCake } from "react-icons/fa";
+/** @format */
 
-export const features = [
-    {
-        id: 1,
-        title: "Aromati qahva",
-        description:
-            "Yaponiya va Italiya dan import qilingan premium donlar. Har bir kubga arxitektura – to'g'ri harorat, vaqt va harakat.",
-        icon: FaCoffee,
-    },
-    {
-        id: 2,
-        title: "Ko'p tilli kitoblar",
-        description:
-            "Adabiyot, san'at, dizayn va biznes bo'yicha 5000+ nusxalar. Har bir til va yo'nalish uchun.",
-        icon: FaBook,
-    },
-    {
-        id: 3,
-        title: "Stol o'yinlari",
-        description:
-            "Do'stlar bilan o'tkazish uchun strategiya, karra va mantiq o'yinlari to'plami.",
-        icon: FaGamepad,
-    },
-    {
-        id: 4,
-        title: "Fresh desertlar",
-        description:
-            "Har kuni tayyorlanadigan xom asal, shirinliklar va nonushta. Faqat yangi va tabiiy mahsulotlar.",
-        icon: FaBirthdayCake,
-    },
-];
+"use client";
+
+import { FaCoffee, FaBook, FaGamepad, FaBirthdayCake } from "react-icons/fa";
+import Shadows from "../shadows";
+import { useTranslation } from "react-i18next";
 
 const ACCENT = "#66C2A8";
 
 export default function AboutWe() {
+    const { t } = useTranslation();
+    const features = [
+        {
+            id: 1,
+            title: t("about.features.coffee.title"),
+            description: t("about.features.coffee.text"),
+            icon: FaCoffee,
+        },
+        {
+            id: 2,
+            title: t("about.features.books.title"),
+            description: t("about.features.books.text"),
+            icon: FaBook,
+        },
+        {
+            id: 3,
+            title: t("about.features.games.title"),
+            description: t("about.features.games.text"),
+            icon: FaGamepad,
+        },
+        {
+            id: 4,
+            title: t("about.features.desserts.title"),
+            description: t("about.features.desserts.text"),
+            icon: FaBirthdayCake,
+        },
+    ] as const;
+
     return (
         <section
             className="relative overflow-hidden bg-[#1F3A34]/90 bg-[url('/images/about.jpg')] bg-cover bg-center bg-no-repeat bg-scroll py-16 md:bg-fixed"
         >
-            <div className="pointer-events-none absolute inset-0 bg-black/55" />
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/40 via-black/10 to-black/50" />
-            <div
-                className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full blur-3xl"
-                style={{ backgroundColor: `${ACCENT}2b` }}
-            />
-            <div
-                className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full blur-3xl"
-                style={{ backgroundColor: `${ACCENT}26` }}
-            />
-
+            <Shadows />
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div className="max-w-2xl">
                     <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                        Biz haqimizda
+                        {t("about.title")}
                     </h2>
                     <p className="mt-3 text-sm leading-relaxed text-white/75 sm:text-base">
-                        Qahva, kitob va dam olish bir joyda. Biz sizga diqqat jamlash,
-                        ilhom olish va do‘stlar bilan yoqimli vaqt o‘tkazish uchun premium
-                        muhit yaratdik.
+                        {t("about.subtitle")}
                     </p>
                 </div>
 

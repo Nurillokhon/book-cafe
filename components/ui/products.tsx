@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import OrderModal from "@/components/ui/OrderModal";
+import { useTranslation } from "react-i18next";
+import Shadows from "../shadows";
 
 type Category = "All" | "Coffee" | "Dessert" | "Tea" | "Breakfast";
 
@@ -130,21 +132,14 @@ const PRODUCTS: Product[] = [
     },
 ];
 
-const CATEGORY_LABELS: Record<Category, string> = {
-    All: "Hammasi",
-    Coffee: "Qahva",
-    Dessert: "Desert",
-    Tea: "Choy",
-    Breakfast: "Nonushta",
-};
-
 const CATEGORIES: Category[] = ["All", "Coffee", "Dessert", "Tea", "Breakfast"];
 
-function formatPrice(price: number) {
-    return `${price} so'm`;
+function formatPrice(price: number, suffix: string) {
+    return `${price} ${suffix}`;
 }
 
 export default function Products() {
+    const { t } = useTranslation();
     const [active, setActive] = useState<Category>("All");
     const [orderOpen, setOrderOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<string | undefined>(
@@ -158,23 +153,15 @@ export default function Products() {
 
     return (
         <section className="relative overflow-hidden bg-[#1F3A34]/90 py-16">
-            <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/30 via-black/10 to-black/40" />
-            <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full blur-3xl"
-                style={{ backgroundColor: `${ACCENT}33` }}
-            />
-            <div
-                className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full blur-3xl"
-                style={{ backgroundColor: `${ACCENT}26` }}
-            />
-
+            <Shadows />
             <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-                            Mahsulotlar
+                            {t("products.title")}
                         </h2>
                         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
-                            Kayfiyatingizga mos tanlang — qahva klassikalari, desertlar, choy va yengil tamaddilar.
+                            {t("products.subtitle")}
                         </p>
                     </div>
 
@@ -195,7 +182,7 @@ export default function Products() {
                                     ].join(" ")}
                                     style={isActive ? { boxShadow: `0 0 0 1px ${ACCENT}40` } : undefined}
                                 >
-                                    {CATEGORY_LABELS[c]}
+                                    {t(`products.categories.${c}`)}
                                 </button>
                             );
                         })}
@@ -222,7 +209,7 @@ export default function Products() {
                                 />
                                 <div className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/10 via-black/0 to-black/60" />
                                 <div className="absolute left-4 top-4 inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur">
-                                    {CATEGORY_LABELS[p.category]}
+                                    {t(`products.categories.${p.category}`)}
                                 </div>
                             </div>
 
@@ -237,7 +224,7 @@ export default function Products() {
                                 <div className="mt-5 flex items-end justify-between">
                                     <div>
                                         <div className="text-2xl font-semibold text-white">
-                                            {formatPrice(p.price)}
+                                            {formatPrice(p.price, t("products.priceSuffix"))}
                                         </div>
                                         <div className="mt-1 text-xs text-white/55">
                                             {p.size}
@@ -252,7 +239,7 @@ export default function Products() {
                                         className="inline-flex h-11 items-center justify-center rounded-full border border-white/15 bg-white/10 px-4 text-sm font-semibold text-white/90 backdrop-blur transition hover:bg-white/15 hover:text-white"
                                         style={{ boxShadow: `0 0 0 1px ${ACCENT}33` }}
                                     >
-                                        Buyurtma
+                                        {t("products.order")}
                                     </button>
                                 </div>
                             </div>

@@ -1,3 +1,7 @@
+/** @format */
+
+"use client";
+
 import React from "react";
 import {
     FaInstagram,
@@ -6,12 +10,14 @@ import {
     FaRegClock,
     FaStar,
 } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 const ACCENT = "#66C2A8";
 
 const Footer = () => {
+    const { t } = useTranslation();
     return (
-        <footer className="relative overflow-hidden bg-[#0f1f1b] text-white">
+        <footer className="relative overflow-hidden border-t border-white/10 bg-[#07120f] text-white">
             <div
                 className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full blur-3xl"
                 style={{ backgroundColor: `${ACCENT}26` }}
@@ -34,7 +40,7 @@ const Footer = () => {
                                     Book Coffee
                                 </div>
                                 <div className="text-sm text-white/60">
-                                    Toshkent, O‘zbekiston
+                                    {t("footer.city")}
                                 </div>
                             </div>
                         </div>
@@ -75,7 +81,7 @@ const Footer = () => {
                         <div className="grid gap-10 sm:grid-cols-1">
                             <div>
                                 <div className="text-sm font-semibold tracking-tight text-white">
-                                    Aloqa
+                                    {t("footer.contact")}
                                 </div>
                                 <ul className="mt-4 space-y-4 text-sm text-white/70">
                                     <li className="flex items-start gap-3">
@@ -96,7 +102,7 @@ const Footer = () => {
                                             className="text-[14px]"
                                             style={{ color: ACCENT }}
                                         />
-                                        <span>Ochiq · 23:00 da yopiladi</span>
+                                        <span>{t("footer.openUntil")}</span>
                                     </li>
                                     <li className="flex items-center gap-3">
                                         <FaPhoneAlt
@@ -128,16 +134,16 @@ const Footer = () => {
 
                                 <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
                                     <div className="text-xs font-semibold text-white/75">
-                                        Narxlar diapazoni
+                                        {t("footer.priceRangeTitle")}
                                     </div>
                                     <div className="mt-1 text-sm text-white">
                                         UZS 100,000–150,000{" "}
                                         <span className="text-white/60">
-                                            (kishi boshiga)
+                                            {t("footer.perPerson")}
                                         </span>
                                     </div>
                                     <div className="mt-1 text-xs text-white/55">
-                                        12 ta foydalanuvchi ma’lumotiga ko‘ra
+                                        {t("footer.basedOn")}
                                     </div>
                                 </div>
                             </div>
@@ -149,20 +155,20 @@ const Footer = () => {
 
                 <div className="mt-6 flex flex-col gap-4 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        © {new Date().getFullYear()} Book Coffee. Barcha huquqlar himoyalangan.
+                        © {new Date().getFullYear()} Book Coffee. {t("footer.rights")}
                     </div>
                     <div className="flex flex-wrap gap-x-4 gap-y-2">
                         <a href="#save" className="transition hover:text-white/80">
-                            Saqlash
+                            {t("footer.save")}
                         </a>
                         <a href="#share" className="transition hover:text-white/80">
-                            Ulashish
+                            {t("footer.share")}
                         </a>
                         <a href="#nearby" className="transition hover:text-white/80">
-                            Yaqin joylar
+                            {t("footer.nearby")}
                         </a>
                         <a href="#send" className="transition hover:text-white/80">
-                            Telefonga yuborish
+                            {t("footer.sendToPhone")}
                         </a>
                     </div>
                 </div>
