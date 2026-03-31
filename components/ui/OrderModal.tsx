@@ -274,10 +274,14 @@ export default function OrderModal({ open, onClose, product }: Props) {
                     type="button"
                     className="w-full pb-2 text-left text-white underline-offset-2 hover:underline"
                     onClick={() =>
-                      window.open("https://t.me/Book_coffeeUz_bot", "_blank", "noopener,noreferrer")
+                      window.open(
+                        "https://t.me/Book_coffeeUz_bot?start=orders",
+                        "_blank",
+                        "noopener,noreferrer",
+                      )
                     }
                   >
-                    📲 {t("orderModal.trackTelegram")}
+                    📲 {t("orderModal.startTelegram")}
                   </button>
 
                   {status ? (
